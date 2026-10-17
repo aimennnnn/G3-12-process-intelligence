@@ -1,0 +1,37 @@
+# G3-12 Process Intelligence — experiment configuration
+# Every script reads this file. Change values here, not in code.
+
+seed: 42
+
+data:
+  # Real dataset (download it yourself, see README):
+  raw_path: data/raw/DomesticDeclarations.xes.gz
+  # Small synthetic log for quick tests (made by scripts/make_sample_log.py):
+  sample_path: data/sample/sample_declarations.xes.gz
+  processed_dir: data/processed
+  train_ratio: 0.8          # temporal split by case start time
+  min_trace_len: 2
+
+tasks:
+  next_activity:
+    n_samples: 200          # prefixes drawn from the test split
+  anomaly:
+    n_samples: 200          # traces drawn from the test split
+    anomaly_ratio: 0.5      # half are perturbed (skip / swap / insert / rework)
+
+llm:
+  # groq   -> free cloud API, needs GROQ_API_KEY in .env (default)
+  # gemini -> free cloud API, needs GEMINI_API_KEY in .env (backup)
+  # ollama -> local model, needs ~8GB free RAM
+  # mock   -> no model at all, for testing the pipeline offline
+  provider: groq
+  model: llama-3.1-8b-instant
+  temperature: 0.0
+  max_tokens: 16
+  requests_per_minute: 28   # Groq free tier allows 30/min
+  timeout_s: 60
+  cache_path: results/llm_cache.jsonl   # re-runs reuse answers and cost nothing
+
+eval:
+  results_dir: results
+  methods: [process_mining, fixed_llm]

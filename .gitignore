@@ -1,0 +1,23 @@
+# secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# data: the real log is downloaded by each person, never committed
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# large / per-machine outputs (summary files ARE committed)
+results/llm_cache.jsonl
+results/predictions_*.jsonl
+
+# synthetic sample log (regenerate with scripts/make_sample_log.py)
+data/sample/*
+!data/sample/.gitkeep
