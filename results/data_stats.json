@@ -1,0 +1,38 @@
+{
+  "source": "data/raw/DomesticDeclarations.xes.gz",
+  "full": {
+    "n_cases": 10366,
+    "n_events": 56303,
+    "n_activities": 17,
+    "n_variants": 98,
+    "avg_trace_len": 5.43,
+    "max_trace_len": 24,
+    "start": "2017-01-09 08:49:50+00:00",
+    "end": "2019-06-17 15:30:58+00:00"
+  },
+  "train": {
+    "n_cases": 8292,
+    "n_events": 44661,
+    "n_activities": 17,
+    "n_variants": 91,
+    "avg_trace_len": 5.39,
+    "max_trace_len": 24,
+    "start": "2017-01-09 08:49:50+00:00",
+    "end": "2019-04-22 21:04:55+00:00"
+  },
+  "test": {
+    "n_cases": 2074,
+    "n_events": 11642,
+    "n_activities": 10,
+    "n_variants": 28,
+    "avg_trace_len": 5.61,
+    "max_trace_len": 18,
+    "start": "2018-10-12 07:15:16+00:00",
+    "end": "2019-06-17 15:30:58+00:00"
+  },
+  "tasks": {
+    "next_activity": 200,
+    "anomaly": 200,
+    "anomalies": 100
+  }
+}

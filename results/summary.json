@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "dataset": "data/raw/DomesticDeclarations.xes.gz",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
+    "seed": 42,
+    "when": "2026-10-17 21:30"
+  },
+  "results": {
+    "process_mining": {
+      "next_activity": {
+        "n": 200,
+        "accuracy": 0.925,
+        "macro_f1": 0.6506,
+        "llm_calls_per_task": 0.0,
+        "tokens_per_task": 0.0,
+        "latency_s_per_task": 0.0,
+        "invalid_output_rate": 0.0
+      },
+      "anomaly": {
+        "n": 200,
+        "accuracy": 0.99,
+        "precision": 1.0,
+        "recall": 0.98,
+        "f1": 0.9899,
+        "recall_by_type": {
+          "insert": 0.958,
+          "rework": 1.0,
+          "skip": 0.933,
+          "swap": 1.0
+        },
+        "llm_calls_per_task": 0.0,
+        "tokens_per_task": 0.0,
+        "latency_s_per_task": 0.0,
+        "invalid_output_rate": 0.0
+      }
+    },
+    "fixed_llm": {
+      "next_activity": {
+        "n": 200,
+        "accuracy": 0.595,
+        "macro_f1": 0.3232,
+        "llm_calls_per_task": 1.0,
+        "tokens_per_task": 462.8,
+        "latency_s_per_task": 0.875,
+        "invalid_output_rate": 0.0
+      },
+      "anomaly": {
+        "n": 200,
+        "accuracy": 0.82,
+        "precision": 0.8736,
+        "recall": 0.76,
+        "f1": 0.8128,
+        "recall_by_type": {
+          "insert": 0.833,
+          "rework": 1.0,
+          "skip": 0.0,
+          "swap": 0.773
+        },
+        "llm_calls_per_task": 1.0,
+        "tokens_per_task": 433.5,
+        "latency_s_per_task": 0.925,
+        "invalid_output_rate": 0.01
+      }
+    }
+  }
+}
