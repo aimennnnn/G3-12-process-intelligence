@@ -25,9 +25,9 @@ llm:
   # ollama -> local model, needs ~8GB free RAM
   # mock   -> no model at all, for testing the pipeline offline
   provider: groq
-  model: llama-3.1-8b-instant
+  model: openai/gpt-oss-20b
   temperature: 0.0
-  max_tokens: 16
+  max_tokens: 1024
   requests_per_minute: 28   # Groq free tier allows 30/min
   timeout_s: 60
   cache_path: results/llm_cache.jsonl   # re-runs reuse answers and cost nothing
