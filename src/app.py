@@ -59,9 +59,9 @@ def main() -> None:
     tool = ProcessModelTool.from_traces(list(to_traces(pd.read_csv(d / "train.csv")).values()),
                                         vocab)
     spec = load_workflow(cfg, args.run, args.workflow)
-    agent = AgentWorkflow(spec, make_llm(cfg, args.provider), vocab, tool,
-                          cfg["optimizer"]["ensemble_temperature"])
-    print(f"Workflow: {spec.describe()}\n")
+    agent = AgentWorkflow(spec, make_llm(cfg, args.provider), vocab, tool.pm)
+    desc = spec.describe() if hasattr(spec, "describe") else spec.signature()
+    print(f"Workflow: {desc}\n")
 
     if args.mode == "next":
         ans, meta = agent.predict_next(args.activities)
@@ -72,8 +72,11 @@ def main() -> None:
 
     print("\nTrajectory:")
     for i, s in enumerate(meta["steps"], 1):
-        out = json.dumps(s["output"]) if isinstance(s["output"], dict) else s["output"]
-        print(f"  {i}. {s['op']} ({s['type']}): {str(out)[:300]}")
+        if isinstance(s, dict):
+            out = json.dumps(s.get("output")) if isinstance(s.get("output"), dict) else s.get("output")
+            print(f"  {i}. {s.get('op')} ({s.get('type')}): {str(out)[:300]}")
+        else:
+            print(f"  {i}. {s}")
     print(f"\n{meta['llm_calls']} LLM call(s), "
           f"{meta['prompt_tokens'] + meta['completion_tokens']} tokens, "
           f"{meta['tool_calls']} tool call(s)")

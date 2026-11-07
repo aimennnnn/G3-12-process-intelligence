@@ -11,8 +11,10 @@ again later and it continues where it stopped.
 
 Outputs per run
   results/runs/<id>.json             config, search tree, best workflow, val + test metrics
-  logs/<id>/search.jsonl             one line per search round (optimiser prompt, reply,
-                                     proposed change, score): the optimisation trajectory
+  logs/<id>/search.jsonl             one line per search round (change, score, proposer
+                                     reasoning): the optimisation trajectory
+  logs/<id>/search_log.txt           the search's progress messages
+  logs/<id>/search_trajectories.jsonl  agent steps of every candidate during the search
   logs/<id>/test_predictions.jsonl   every test task with its agent trajectory
                                      (tool calls, LLM outputs, verification steps)
 """
@@ -79,22 +81,34 @@ class Data:
         self.val_an = read_jsonl(d / "val_anomaly.jsonl")[:o["n_val_anomaly"]]
 
 
+def _stats(client) -> dict:
+    """API-usage counters, if the LLM client keeps them (G3's client does)."""
+    st = getattr(client, "stats", None)
+    return dict(st.as_dict()) if st is not None and hasattr(st, "as_dict") else {}
+
+
+def _describe(spec) -> str:
+    return spec.describe() if hasattr(spec, "describe") else spec.signature()
+
+
 def run_one(run: dict, cfg: dict, data: Data, llm, opt_llm, res: Path, logs: Path) -> dict:
     from src.eval.evaluate import run_tasks, summarise
     if run["kind"] != "baseline":
-        from src.agents.optimizer import best_record, evaluate_spec, optimise
+        from src.agents.optimizer import best_record, optimise   # G1
+        from src.agents.workflow import AgentWorkflow           # G1
     o = cfg["optimizer"]
     cw = float(run.get("cost_weight", 0.0))
     out = {"id": run["id"], "experiment": run["exp"], "kind": run["kind"], "run": run,
            "models": {"executor": cfg["llm"]["model"],
-                      "optimizer": cfg.get("optimizer_llm", {}).get("model"),
+                      "optimizer": (cfg.get("optimizer_llm", {}).get("model")
+                                    if opt_llm is not llm else cfg["llm"]["model"]),
                       "provider": getattr(llm, "provider", "?"),
                       "reasoning_effort": cfg["llm"].get("reasoning_effort"),
                       "temperature": cfg["llm"].get("temperature")},
            "n_test": {"next_activity": len(data.test_na), "anomaly": len(data.test_an)},
            "n_val": {"next_activity": len(data.val_na), "anomaly": len(data.val_an)},
            "started": time.strftime("%Y-%m-%d %H:%M")}
-    before = dict(llm.stats.as_dict()) if llm else {}
+    before = _stats(llm)
     t0 = time.time()
 
     if run["kind"] == "baseline":
@@ -103,20 +117,33 @@ def run_one(run: dict, cfg: dict, data: Data, llm, opt_llm, res: Path, logs: Pat
     else:
         seed_spec = get_seed(run["seed"])
         if run["kind"] == "search":
-            log_path = logs / run["id"] / "search.jsonl"
-            log_path.parent.mkdir(parents=True, exist_ok=True)
+            run_logs = logs / run["id"]
+            run_logs.mkdir(parents=True, exist_ok=True)
+            log_path = run_logs / "search_log.txt"
             log_path.write_text(encoding="utf-8", data="")
 
-            def log(event):
+            def log(msg):
+                print(f"    {msg}")
                 with open(log_path, "a", encoding="utf-8") as f:
-                    f.write(json.dumps(event, default=str) + "\n")
+                    f.write(str(msg) + "\n")
 
-            history = optimise(seed_spec, llm, opt_llm, data.vocab, data.tool_fit,
-                               data.val_na, data.val_an, cost_weight=cw, rounds=o["rounds"],
-                               run_seed=int(run["run_seed"]), patience=o["patience"],
+            extra = {}
+            try:   # G1's trajectory logger: every candidate's agent steps during the search
+                from src.agents.trajectory import TrajectoryLogger
+                extra["traj_logger"] = TrajectoryLogger(run_logs / "search_trajectories.jsonl")
+            except ImportError:
+                pass
+            exp_path = run_logs / "search.jsonl"        # one line per round (the experience pool)
+            exp_path.write_text(encoding="utf-8", data="")
+
+            # The search sees only the process model mined from the FIT part of training.
+            history = optimise(seed_spec, llm, data.vocab, data.tool_fit.pm,
+                               data.val_na, data.val_an, optimizer_llm=opt_llm,
+                               rounds=o["rounds"], cost_weight=cw,
+                               token_scale=o["token_scale"], patience=o["patience"],
                                top_k=o["top_k"], mix_lambda=o["mix_lambda"], alpha=o["alpha"],
-                               token_scale=o["token_scale"],
-                               ensemble_temperature=o["ensemble_temperature"], log=log)
+                               seed=int(run["run_seed"]), experience_path=exp_path,
+                               log=log, **extra)
             best = best_record(history)
             spec = best.spec
             out["search"] = [h.model_dump() for h in history]
@@ -124,19 +151,19 @@ def run_one(run: dict, cfg: dict, data: Data, llm, opt_llm, res: Path, logs: Pat
         else:
             spec = seed_spec
         out["workflow"] = spec.model_dump()
-        out["workflow_text"] = spec.describe()
-        print(f"    test evaluation of [{spec.describe()}]")
-        _, rows = evaluate_spec(spec, llm, data.vocab, data.tool_full, data.test_na,
-                                data.test_an, cw, o["token_scale"], o["ensemble_temperature"],
-                                progress="test")
+        out["workflow_text"] = _describe(spec)
+        print(f"    test evaluation of [{_describe(spec)}]")
+        # Final test: the process model mined from ALL training cases, like the baseline.
+        agent = AgentWorkflow(spec, llm, data.vocab, data.pm_full)
+        rows = run_tasks(agent, run["id"], data.test_na, data.test_an, progress="test")
 
     write_jsonl(logs / run["id"] / "test_predictions.jsonl", rows)
     out["test"] = summarise(rows, cw, o["token_scale"])
-    if llm:
-        after = llm.stats.as_dict()
+    after = _stats(llm)
+    if after:
         out["client_stats"] = {k: after[k] - before.get(k, 0) for k in after}
-    if opt_llm and run["kind"] == "search":
-        out["optimizer_client_stats"] = opt_llm.stats.as_dict()
+    if opt_llm is not None and opt_llm is not llm and run["kind"] == "search" and _stats(opt_llm):
+        out["optimizer_client_stats"] = _stats(opt_llm)
     out["wall_time_s"] = round(time.time() - t0, 1)
     (res / "runs").mkdir(parents=True, exist_ok=True)
     (res / "runs" / f"{run['id']}.json").write_text(encoding="utf-8", data=json.dumps(out, indent=2, default=str))
@@ -171,7 +198,12 @@ def main() -> None:
     from src.llm.client import make_llm
     needs_llm = any(r["kind"] != "baseline" or r.get("method") != "process_mining" for r in runs)
     llm = make_llm(cfg, args.provider) if needs_llm else None
-    opt_llm = make_llm(cfg, args.provider, role="optimizer") if needs_llm else None
+    opt_llm = None
+    if needs_llm:
+        try:      # G3's client can build a separate optimiser model (config: optimizer_llm)
+            opt_llm = make_llm(cfg, args.provider, role="optimizer")
+        except TypeError:   # older client: the optimiser uses the executor model
+            opt_llm = llm
 
     todo = [r for r in runs if args.force or not (res / "runs" / f"{r['id']}.json").exists()]
     print(f"{len(runs) - len(todo)} runs already done, {len(todo)} to go.")
@@ -186,7 +218,7 @@ def main() -> None:
         na, an = t.get("next_activity", {}), t.get("anomaly", {})
         print(f"  -> test next-activity acc {na.get('accuracy', 0):.3f} | anomaly F1 "
               f"{an.get('f1', 0):.3f} | tokens/task {t['overall']['tokens_per_task']:.0f} "
-              f"| {out['wall_time_s']:.0f}s | API calls {out.get('client_stats', {}).get('api_calls', 0)}")
+              f"| {out['wall_time_s']:.0f}s")
     print("\nAll runs finished. Next: python -m experiments.analyze")
 
 
