@@ -1,0 +1,39 @@
+# Every experiment run, in the order run_all executes them (most important first,
+# so the core results exist even if the free API quota runs out early).
+#
+#   kind: baseline -> evaluate a fixed method on the test tasks
+#   kind: fixed    -> evaluate a fixed workflow (no search) on the test tasks
+#   kind: search   -> run the self-improving search on validation tasks, then
+#                     evaluate the best workflow found on the test tasks
+#
+#   seed:        blank   = AFlow's starting point     | process = ProcFlow (Gap 2 ON)
+#   cost_weight: 0       = accuracy-only, as in AFlow | > 0     = cost-aware (Gap 3 ON)
+#   run_seed:    repeats with different search randomness (mean +- std over 3)
+
+runs:
+  # E1: baselines from Phase 1
+  - {id: e1_process_mining, exp: E1, kind: baseline, method: process_mining}
+  - {id: e1_fixed_llm,      exp: E1, kind: baseline, method: fixed_llm}
+
+  # E5 (no-search ablation): the process-seeded workflow without any optimisation
+  - {id: e5_seed_only, exp: E5, kind: fixed, seed: process}
+
+  # first repetition of the main comparisons
+  - {id: e3_procflow_s1,      exp: E3, kind: search, seed: process, cost_weight: 0.1, run_seed: 1}
+  - {id: e2_aflow_blank_s1,   exp: E2, kind: search, seed: blank,   cost_weight: 0.0, run_seed: 1}
+  - {id: e5_no_seed_s1,       exp: E5, kind: search, seed: blank,   cost_weight: 0.1, run_seed: 1}
+  - {id: e5_no_cost_s1,       exp: E5, kind: search, seed: process, cost_weight: 0.0, run_seed: 1}
+
+  # repetitions 2 and 3
+  - {id: e3_procflow_s2,      exp: E3, kind: search, seed: process, cost_weight: 0.1, run_seed: 2}
+  - {id: e2_aflow_blank_s2,   exp: E2, kind: search, seed: blank,   cost_weight: 0.0, run_seed: 2}
+  - {id: e5_no_seed_s2,       exp: E5, kind: search, seed: blank,   cost_weight: 0.1, run_seed: 2}
+  - {id: e5_no_cost_s2,       exp: E5, kind: search, seed: process, cost_weight: 0.0, run_seed: 2}
+  - {id: e3_procflow_s3,      exp: E3, kind: search, seed: process, cost_weight: 0.1, run_seed: 3}
+  - {id: e2_aflow_blank_s3,   exp: E2, kind: search, seed: blank,   cost_weight: 0.0, run_seed: 3}
+  - {id: e5_no_seed_s3,       exp: E5, kind: search, seed: blank,   cost_weight: 0.1, run_seed: 3}
+  - {id: e5_no_cost_s3,       exp: E5, kind: search, seed: process, cost_weight: 0.0, run_seed: 3}
+
+  # E4 (Gap 3): cost-weight sweep (0.0 and 0.1 come from the runs above)
+  - {id: e4_cost_0.05_s1, exp: E4, kind: search, seed: process, cost_weight: 0.05, run_seed: 1}
+  - {id: e4_cost_0.2_s1,  exp: E4, kind: search, seed: process, cost_weight: 0.2,  run_seed: 1}
