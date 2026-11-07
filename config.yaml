@@ -1,4 +1,4 @@
-# G3-12 Process Intelligence — experiment configuration
+# G3-12 Process Intelligence: experiment configuration
 # Every script reads this file. Change values here, not in code.
 
 seed: 42
@@ -14,12 +14,15 @@ data:
 
 tasks:
   next_activity:
-    n_samples: 200          # prefixes drawn from the test split
+    n_samples: 200          # test prefixes drawn from the test split
   anomaly:
-    n_samples: 200          # traces drawn from the test split
+    n_samples: 200          # test traces drawn from the test split
     anomaly_ratio: 0.5      # half are perturbed (skip / swap / insert / rework)
 
-llm:
+validation:
+  pool_size: 100            # validation tasks built from the latest 20% of TRAINING cases
+
+llm:                        # executor: answers the tasks
   # groq   -> free cloud API, needs GROQ_API_KEY in .env (default)
   # gemini -> free cloud API, needs GEMINI_API_KEY in .env (backup)
   # ollama -> local model, needs ~8GB free RAM
@@ -27,11 +30,32 @@ llm:
   provider: groq
   model: openai/gpt-oss-20b
   temperature: 0.0
-  max_tokens: 1024
-  requests_per_minute: 28   # Groq free tier allows 30/min
+  reasoning_effort: low     # fewer hidden reasoning tokens -> fits the free daily quota
+  max_tokens: 768
+  requests_per_minute: 28   # per key; Groq free tier allows 30/min
   timeout_s: 60
   cache_path: results/llm_cache.jsonl   # re-runs reuse answers and cost nothing
+  key_envs: [GROQ_API_KEY, GROQ_API_KEY_2, GROQ_API_KEY_3, GROQ_API_KEY_4, GROQ_API_KEY_5, GROQ_API_KEY_6]   # missing ones are skipped
+
+optimizer_llm:              # optimiser: proposes workflow changes (AFlow also uses a stronger optimiser model)
+  model: openai/gpt-oss-120b
+  temperature: 0.7
+  reasoning_effort: medium
+  max_tokens: 2048
+
+optimizer:
+  rounds: 4                 # modifications per search (plus the seed evaluation); limited by the free API quota
+  patience: 3               # stop early if the best score does not improve for 3 rounds
+  top_k: 3                  # soft mixed-probability selection over the 3 best nodes
+  mix_lambda: 0.2
+  alpha: 0.4
+  n_val_next_activity: 15   # validation tasks used per candidate workflow
+  n_val_anomaly: 15
+  ensemble_temperature: 0.7
+  token_scale: 1000
 
 eval:
   results_dir: results
+  logs_dir: logs
   methods: [process_mining, fixed_llm]
+  test_limit: 100           # test tasks per type used in Phase 2 (first 100 of each = 200 tasks)

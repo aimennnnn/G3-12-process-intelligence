@@ -21,3 +21,7 @@ results/predictions_*.jsonl
 # synthetic sample log (regenerate with scripts/make_sample_log.py)
 data/sample/*
 !data/sample/.gitkeep
+
+# offline smoke-test outputs (mock model): never commit or report
+results/mock/
+logs/mock/

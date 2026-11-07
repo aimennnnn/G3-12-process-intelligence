@@ -4,7 +4,12 @@
     python -m src.data.prepare --sample      # small synthetic log for testing
 
 Writes to data/processed/: train.csv, test.csv, vocab.json,
-next_activity.jsonl, anomaly.jsonl, and results/data_stats.json.
+next_activity.jsonl, anomaly.jsonl (TEST tasks), val_next_activity.jsonl,
+val_anomaly.jsonl (VALIDATION tasks for the optimiser, built from the latest
+20% of the training cases), and results/data_stats.json.
+
+The test tasks are identical to Phase 1 (same seed), so Phase 1 numbers stay
+comparable.
 """
 from __future__ import annotations
 
@@ -49,15 +54,28 @@ def main() -> None:
     an = build_anomaly(test_traces, variants, vocab, t["anomaly"]["n_samples"],
                        t["anomaly"]["anomaly_ratio"], seed)
 
+    # Validation tasks: the optimiser may only look at these, never at the test set.
+    fit, val = temporal_split(train, d["train_ratio"])
+    v = cfg.get("validation", {"pool_size": 100})
+    val_na = build_next_activity(to_traces(val), v["pool_size"], seed + 100)
+    val_an = build_anomaly(to_traces(val), variants, vocab, v["pool_size"],
+                           t["anomaly"]["anomaly_ratio"], seed + 100)
+    for row in val_na + val_an:
+        row["task_id"] = "val_" + row["task_id"]
+
     train.to_csv(out / "train.csv", index=False)
     test.to_csv(out / "test.csv", index=False)
     (out / "vocab.json").write_text(json.dumps(vocab, indent=2))
     write_jsonl(out / "next_activity.jsonl", na)
     write_jsonl(out / "anomaly.jsonl", an)
+    write_jsonl(out / "val_next_activity.jsonl", val_na)
+    write_jsonl(out / "val_anomaly.jsonl", val_an)
 
     stats = {"source": str(src), "full": log_stats(df), "train": log_stats(train),
-             "test": log_stats(test), "tasks": {"next_activity": len(na),
-             "anomaly": len(an), "anomalies": sum(x["label"] for x in an)}}
+             "test": log_stats(test), "fit": log_stats(fit), "validation": log_stats(val),
+             "tasks": {"next_activity": len(na), "anomaly": len(an),
+                       "anomalies": sum(x["label"] for x in an),
+                       "val_next_activity": len(val_na), "val_anomaly": len(val_an)}}
     res = Path(cfg["eval"]["results_dir"])
     res.mkdir(parents=True, exist_ok=True)
     (res / "data_stats.json").write_text(json.dumps(stats, indent=2))
@@ -67,7 +85,8 @@ def main() -> None:
           f" | variants {f['n_variants']}")
     print(f"Train cases {stats['train']['n_cases']} | test cases {stats['test']['n_cases']}")
     print(f"Tasks: {len(na)} next-activity, {len(an)} anomaly "
-          f"({stats['tasks']['anomalies']} perturbed). Saved to {out}/")
+          f"({stats['tasks']['anomalies']} perturbed); validation pool {len(val_na)} + "
+          f"{len(val_an)}. Saved to {out}/")
 
 
 if __name__ == "__main__":
