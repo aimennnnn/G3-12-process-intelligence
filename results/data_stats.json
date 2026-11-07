@@ -30,9 +30,31 @@
     "start": "2018-10-12 07:15:16+00:00",
     "end": "2019-06-17 15:30:58+00:00"
   },
+  "fit": {
+    "n_cases": 6633,
+    "n_events": 35186,
+    "n_activities": 17,
+    "n_variants": 81,
+    "avg_trace_len": 5.3,
+    "max_trace_len": 18,
+    "start": "2017-01-09 08:49:50+00:00",
+    "end": "2019-04-22 21:04:55+00:00"
+  },
+  "validation": {
+    "n_cases": 1659,
+    "n_events": 9475,
+    "n_activities": 10,
+    "n_variants": 33,
+    "avg_trace_len": 5.71,
+    "max_trace_len": 24,
+    "start": "2018-07-06 12:54:54+00:00",
+    "end": "2019-01-07 16:31:12+00:00"
+  },
   "tasks": {
     "next_activity": 200,
     "anomaly": 200,
-    "anomalies": 100
+    "anomalies": 100,
+    "val_next_activity": 100,
+    "val_anomaly": 100
   }
 }
