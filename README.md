@@ -51,12 +51,18 @@ pip install -r requirements.txt
 cp .env.example .env        # Windows: copy .env.example .env
 ```
 
-Get a **free** Groq key (no card) at https://console.groq.com/keys and paste it into `.env`:
+Get a **free** Groq key at https://console.groq.com/keys or a Google Gemini API key at https://aistudio.google.com/apikey, and paste into `.env`:
 ```
 GROQ_API_KEY=gsk_...
+GROQ_API_KEY_2=gsk_...
+GROQ_API_KEY_3=gsk_...
+
+GEMINI_API_KEY=AIzaSy...
+GEMINI_API_KEY_2=AIzaSy...
+GEMINI_API_KEY_3=AIzaSy...
 ```
-The default model is `openai/gpt-oss-20b` (OpenAI, open-weight). It runs on Groq's servers, so it works on 8GB laptops.
-Free tier: 30 requests/minute, which the client respects automatically.
+The client features a **3-key rotation ring** that automatically rotates keys upon HTTP 429 (rate-limit) or quota thresholds.
+Supported providers: `groq` (default, `openai/gpt-oss-20b`), `gemini` (`gemini-1.5-flash`), `ollama`, or `mock`.
 
 ## Run
 
@@ -70,8 +76,11 @@ python -m src.eval.run_eval --limit 10
 # 3. Full baseline run (400 tasks, ~15-20 minutes on the free tier)
 python -m src.eval.run_eval
 
-# 4. Optional: the early agent workflow too
-python -m src.eval.run_eval --methods process_mining fixed_llm agent_seeded
+# 4. Optional: run with Google Gemini API
+python -m src.eval.run_eval --provider gemini
+
+# 5. Run efficiency analysis (E6)
+python -m experiments.e6_efficiency
 ```
 
 Results land in `results/summary.md` (table for the report), `results/summary.json`,
@@ -106,12 +115,20 @@ config.yaml                 all settings
 src/
   data/                     xes_loader, preprocess, build_tasks, prepare (entry point)
   baselines/                process_mining (DFG), fixed_llm (one fixed prompt)
-  llm/client.py             Groq / Gemini / Ollama / mock, rate limit, retries, cache
+  llm/client.py             Groq / Gemini (3-key rotation ring), rate limit, retries, stats tracking, cache
   agents/
     state.py                structured contracts (tasks, predictions, workflow spec)
     workflow.py             operators: process_context, generate, ensemble, verify
+    seeds.py                seed workflows (blank vs process-seeded)
+    objective.py            G3: cost-aware objective & Pareto-frontier ranking (Gap 3)
     optimizer.py            Phase 2 self-improvement loop (AFlow-style)
-  eval/                     metrics, run_eval (entry point)
+  eval/                     metrics, evaluate, failure_analysis, run_eval
+experiments/
+  runs.yaml                 specification of all benchmark runs (E1-E5)
+  run_all.py                experiment execution runner with key rotation
+  analyze.py                results analysis and table generation
+  e5_ablation.py            systematic single-operator ablation study
+  e6_efficiency.py          G3: inference and search efficiency analysis (E6)
 scripts/make_sample_log.py  synthetic test log
 tests/                      unit tests
 docs/summaries/             literature review notes per member

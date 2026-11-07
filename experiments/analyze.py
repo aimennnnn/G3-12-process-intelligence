@@ -348,6 +348,14 @@ def main() -> None:
     fig_convergence(runs, figs)
     fig_cost(g3, figs)
     fig_recall(groups, figs)
+
+    # G3: E6 Efficiency Analysis
+    try:
+        from experiments.e6_efficiency import run_e6_analysis
+        run_e6_analysis(res)
+    except Exception as e:
+        print(f"Note: E6 efficiency analysis skipped or partial: {e}")
+
     print((tables / "main_results.md").read_text(encoding="utf-8"))
     if gaps:
         print((tables / "gap_resolution.md").read_text(encoding="utf-8"))

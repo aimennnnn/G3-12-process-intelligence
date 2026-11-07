@@ -16,6 +16,11 @@ def load_dotenv(path: str | Path = ".env") -> None:
     """Read KEY=value lines from .env into os.environ (existing vars win)."""
     p = Path(path)
     if not p.exists():
+        for alt in [Path("repo/.env"), Path(__file__).resolve().parents[1] / ".env", Path(__file__).resolve().parents[2] / ".env"]:
+            if alt.exists():
+                p = alt
+                break
+    if not p.exists():
         return
     for line in p.read_text(encoding="utf-8").splitlines():
         line = line.strip()
