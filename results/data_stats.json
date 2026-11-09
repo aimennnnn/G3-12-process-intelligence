@@ -1,60 +1,60 @@
 {
-  "source": "data/sample/sample_declarations.xes.gz",
+  "source": "data/raw/DomesticDeclarations.xes.gz",
   "full": {
-    "n_cases": 600,
-    "n_events": 3461,
-    "n_activities": 10,
-    "n_variants": 13,
-    "avg_trace_len": 5.77,
-    "max_trace_len": 15,
-    "start": "2017-01-04 07:47:38.332994+00:00",
-    "end": "2018-12-10 00:37:00.067163+00:00"
+    "n_cases": 10366,
+    "n_events": 56303,
+    "n_activities": 17,
+    "n_variants": 98,
+    "avg_trace_len": 5.43,
+    "max_trace_len": 24,
+    "start": "2017-01-09 08:49:50+00:00",
+    "end": "2019-06-17 15:30:58+00:00"
   },
   "train": {
-    "n_cases": 480,
-    "n_events": 2773,
-    "n_activities": 10,
-    "n_variants": 13,
-    "avg_trace_len": 5.78,
-    "max_trace_len": 15,
-    "start": "2017-01-04 07:47:38.332994+00:00",
-    "end": "2018-07-09 14:04:27.486248+00:00"
+    "n_cases": 8292,
+    "n_events": 44661,
+    "n_activities": 17,
+    "n_variants": 91,
+    "avg_trace_len": 5.39,
+    "max_trace_len": 24,
+    "start": "2017-01-09 08:49:50+00:00",
+    "end": "2019-04-22 21:04:55+00:00"
   },
   "test": {
-    "n_cases": 120,
-    "n_events": 688,
+    "n_cases": 2074,
+    "n_events": 11642,
     "n_activities": 10,
-    "n_variants": 11,
-    "avg_trace_len": 5.73,
-    "max_trace_len": 12,
-    "start": "2018-07-02 20:49:09.444453+00:00",
-    "end": "2018-12-10 00:37:00.067163+00:00"
+    "n_variants": 28,
+    "avg_trace_len": 5.61,
+    "max_trace_len": 18,
+    "start": "2018-10-12 07:15:16+00:00",
+    "end": "2019-06-17 15:30:58+00:00"
   },
   "fit": {
-    "n_cases": 384,
-    "n_events": 2222,
-    "n_activities": 10,
-    "n_variants": 13,
-    "avg_trace_len": 5.79,
-    "max_trace_len": 15,
-    "start": "2017-01-04 07:47:38.332994+00:00",
-    "end": "2018-04-08 15:35:42.453401+00:00"
+    "n_cases": 6633,
+    "n_events": 35186,
+    "n_activities": 17,
+    "n_variants": 81,
+    "avg_trace_len": 5.3,
+    "max_trace_len": 18,
+    "start": "2017-01-09 08:49:50+00:00",
+    "end": "2019-04-22 21:04:55+00:00"
   },
   "validation": {
-    "n_cases": 96,
-    "n_events": 551,
-    "n_activities": 9,
-    "n_variants": 7,
-    "avg_trace_len": 5.74,
-    "max_trace_len": 11,
-    "start": "2018-04-01 11:35:50.251496+00:00",
-    "end": "2018-07-09 14:04:27.486248+00:00"
+    "n_cases": 1659,
+    "n_events": 9475,
+    "n_activities": 10,
+    "n_variants": 33,
+    "avg_trace_len": 5.71,
+    "max_trace_len": 24,
+    "start": "2018-07-06 12:54:54+00:00",
+    "end": "2019-01-07 16:31:12+00:00"
   },
   "tasks": {
-    "next_activity": 120,
-    "anomaly": 120,
-    "anomalies": 60,
-    "val_next_activity": 96,
-    "val_anomaly": 96
+    "next_activity": 200,
+    "anomaly": 200,
+    "anomalies": 100,
+    "val_next_activity": 100,
+    "val_anomaly": 100
   }
 }
