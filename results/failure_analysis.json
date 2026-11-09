@@ -1,0 +1,140 @@
+{
+  "e3_procflow_s1": {
+    "method": "e3_procflow_s1",
+    "n_total": 200,
+    "n_failures": 7,
+    "failure_rate": 0.035,
+    "categories": {
+      "wrong_at_branch": 5,
+      "missed_insert": 1,
+      "missed_skip": 1
+    },
+    "category_rates": {
+      "wrong_at_branch": 0.025,
+      "missed_insert": 0.005,
+      "missed_skip": 0.005
+    },
+    "representative_failures": {
+      "wrong_at_branch": [
+        {
+          "task_id": "na_0009",
+          "task": "next_activity",
+          "prefix": [
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration APPROVED by ADMINISTRATION"
+          ],
+          "trace": null,
+          "prediction": "Declaration FINAL_APPROVED by SUPERVISOR",
+          "target": "Declaration APPROVED by BUDGET OWNER",
+          "anomaly_type": null,
+          "explanation": "",
+          "steps": [
+            "process_context: top-1 candidates from DFG",
+            "generate -> Declaration FINAL_APPROVED by SUPERVISOR",
+            "verify (revise): transition 'Declaration APPROVED by ADMINISTRATION'->'Declaration FINAL_APPROVED by SUPERVISOR' seen in DFG (p=0.63); keep"
+          ],
+          "trajectory": null
+        },
+        {
+          "task_id": "na_0055",
+          "task": "next_activity",
+          "prefix": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "trace": null,
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null,
+          "explanation": "",
+          "steps": [
+            "process_context: top-1 candidates from DFG",
+            "generate -> Declaration APPROVED by ADMINISTRATION",
+            "verify (revise): transition 'Declaration SUBMITTED by EMPLOYEE'->'Declaration APPROVED by ADMINISTRATION' seen in DFG (p=0.66); keep"
+          ],
+          "trajectory": null
+        }
+      ],
+      "missed_insert": [
+        {
+          "task_id": "an_0094",
+          "task": "anomaly",
+          "prefix": null,
+          "trace": [
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration APPROVED by ADMINISTRATION",
+            "Declaration FINAL_APPROVED by SUPERVISOR",
+            "Request Payment",
+            "Payment Handled",
+            "Declaration REJECTED by EMPLOYEE"
+          ],
+          "prediction": 0,
+          "target": 1,
+          "anomaly_type": "insert",
+          "explanation": "",
+          "steps": [
+            "process_context: transition report (0 unseen)",
+            "generate -> 0",
+            "verify (revise): LLM answer stands (NORM); model says 0"
+          ],
+          "trajectory": null
+        }
+      ],
+      "missed_skip": [
+        {
+          "task_id": "an_0050",
+          "task": "anomaly",
+          "prefix": null,
+          "trace": [
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration REJECTED by ADMINISTRATION",
+            "Declaration REJECTED by EMPLOYEE",
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration FINAL_APPROVED by SUPERVISOR",
+            "Request Payment",
+            "Payment Handled"
+          ],
+          "prediction": 0,
+          "target": 1,
+          "anomaly_type": "skip",
+          "explanation": "",
+          "steps": [
+            "process_context: transition report (0 unseen)",
+            "generate -> 0",
+            "verify (revise): LLM answer stands (NORM); model says 0"
+          ],
+          "trajectory": null
+        }
+      ]
+    },
+    "representative_successes": [
+      {
+        "task_id": "na_0000",
+        "task": "next_activity",
+        "prefix": [
+          "Declaration SUBMITTED by EMPLOYEE",
+          "Declaration APPROVED by ADMINISTRATION",
+          "Declaration APPROVED by BUDGET OWNER"
+        ],
+        "trace": null,
+        "prediction": "Declaration FINAL_APPROVED by SUPERVISOR",
+        "target": "Declaration FINAL_APPROVED by SUPERVISOR",
+        "anomaly_type": null,
+        "trajectory": null
+      },
+      {
+        "task_id": "na_0001",
+        "task": "next_activity",
+        "prefix": [
+          "Declaration SUBMITTED by EMPLOYEE",
+          "Declaration APPROVED by ADMINISTRATION",
+          "Declaration FINAL_APPROVED by SUPERVISOR"
+        ],
+        "trace": null,
+        "prediction": "Request Payment",
+        "target": "Request Payment",
+        "anomaly_type": null,
+        "trajectory": null
+      }
+    ]
+  }
+}
