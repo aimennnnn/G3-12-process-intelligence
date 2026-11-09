@@ -1,0 +1,601 @@
+{
+  "id": "e4_cost_0.05_s1",
+  "experiment": "E4",
+  "kind": "search",
+  "run": {
+    "id": "e4_cost_0.05_s1",
+    "exp": "E4",
+    "kind": "search",
+    "seed": "process",
+    "cost_weight": 0.05,
+    "run_seed": 1
+  },
+  "models": {
+    "executor": "openai/gpt-oss-20b",
+    "optimizer": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "reasoning_effort": "low",
+    "temperature": 0.0
+  },
+  "n_test": {
+    "next_activity": 100,
+    "anomaly": 100
+  },
+  "n_val": {
+    "next_activity": 15,
+    "anomaly": 15
+  },
+  "started": "2026-11-09 14:18",
+  "search": [
+    {
+      "round": 0,
+      "parent": null,
+      "modification": "seed=process_seeded",
+      "spec": {
+        "name": "process_seeded",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 3
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 565.1,
+      "score": 0.9384,
+      "improved": true,
+      "proposer_reasoning": "initial seed",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 565.1,
+        "latency_s_per_task": 1.054,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        1,
+        4
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 513.2,
+          "latency_s_per_task": 0.849,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9384,
+          "cost_weight": 0.05,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 565.1,
+          "latency_s_per_task": 1.054,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "parent": 0,
+      "modification": "add process_context (top_k=5)",
+      "spec": {
+        "name": "r1",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 5
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 562.2,
+      "score": 0.9385,
+      "improved": true,
+      "proposer_reasoning": "Increasing the context window to the top\u202f5 most likely steps gives the model more relevant alternatives (including \u201cREJECTED\u201d), helping it choose the correct next action without adding costly new operators.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 562.2,
+        "latency_s_per_task": 1.059,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        2
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 507.4,
+          "latency_s_per_task": 0.86,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9385,
+          "cost_weight": 0.05,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 562.2,
+          "latency_s_per_task": 1.059,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "parent": 1,
+      "modification": "add ensemble (n=3)",
+      "spec": {
+        "name": "r2",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 5
+            }
+          },
+          {
+            "operator": "ensemble",
+            "params": {
+              "n": 3
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 1607.7,
+      "score": 0.8863,
+      "improved": false,
+      "proposer_reasoning": "Adding a small ensemble (n=3) lets multiple candidate predictions be compared, improving the chance of selecting the correct \u201cREJECTED\u201d outcome without a large token overhead.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 1607.7,
+        "latency_s_per_task": 3.053,
+        "llm_calls_per_task": 3.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        3
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 3.0,
+          "tokens_per_task": 1522.2,
+          "latency_s_per_task": 2.581,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 3.067,
+          "tokens_per_task": 1693.2,
+          "latency_s_per_task": 3.524,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.8863,
+          "cost_weight": 0.05,
+          "llm_calls_per_task": 3.033,
+          "tokens_per_task": 1607.7,
+          "latency_s_per_task": 3.053,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "parent": 2,
+      "modification": "add ensemble (n=5)",
+      "spec": {
+        "name": "r3",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 5
+            }
+          },
+          {
+            "operator": "ensemble",
+            "params": {
+              "n": 5
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 2653.2,
+      "score": 0.834,
+      "improved": false,
+      "proposer_reasoning": "Increasing the ensemble size gives more diverse model opinions, helping to correct specific mispredictions like confusing \u201cREJECTED\u201d with \u201cAPPROVED\u201d while only modestly raising token usage.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 2653.2,
+        "latency_s_per_task": 5.046,
+        "llm_calls_per_task": 5.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 5.0,
+          "tokens_per_task": 2537.0,
+          "latency_s_per_task": 4.302,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 5.067,
+          "tokens_per_task": 2769.3,
+          "latency_s_per_task": 5.79,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.834,
+          "cost_weight": 0.05,
+          "llm_calls_per_task": 5.033,
+          "tokens_per_task": 2653.2,
+          "latency_s_per_task": 5.046,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "parent": 0,
+      "modification": "add ensemble (n=3)",
+      "spec": {
+        "name": "r4",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 3
+            }
+          },
+          {
+            "operator": "ensemble",
+            "params": {
+              "n": 3
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 1616.4,
+      "score": 0.8858,
+      "improved": false,
+      "proposer_reasoning": "Adding a small ensemble (n=3) can boost overall prediction accuracy, helping correct mistaken decisions like approving instead of rejecting, while keeping the token overhead modest.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 1616.4,
+        "latency_s_per_task": 3.036,
+        "llm_calls_per_task": 3.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 3.0,
+          "tokens_per_task": 1539.6,
+          "latency_s_per_task": 2.548,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 3.067,
+          "tokens_per_task": 1693.2,
+          "latency_s_per_task": 3.524,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.8858,
+          "cost_weight": 0.05,
+          "llm_calls_per_task": 3.033,
+          "tokens_per_task": 1616.4,
+          "latency_s_per_task": 3.036,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    }
+  ],
+  "best_round": 1,
+  "workflow": {
+    "name": "r1",
+    "steps": [
+      {
+        "operator": "process_context",
+        "params": {
+          "top_k": 5
+        }
+      },
+      {
+        "operator": "generate",
+        "params": {}
+      },
+      {
+        "operator": "verify",
+        "params": {
+          "mode": "revise"
+        }
+      }
+    ]
+  },
+  "workflow_text": "process_context(top_k=5)+generate+verify(mode=revise)",
+  "test": {
+    "next_activity": {
+      "n": 100,
+      "accuracy": 0.95,
+      "macro_f1": 0.7,
+      "llm_calls_per_task": 1.0,
+      "tokens_per_task": 540.3,
+      "latency_s_per_task": 0.753,
+      "invalid_output_rate": 0.0
+    },
+    "anomaly": {
+      "n": 100,
+      "accuracy": 0.98,
+      "precision": 1.0,
+      "recall": 0.9583,
+      "f1": 0.9787,
+      "recall_by_type": {
+        "insert": 0.889,
+        "rework": 1.0,
+        "skip": 0.875,
+        "swap": 1.0
+      },
+      "llm_calls_per_task": 1.04,
+      "tokens_per_task": 618.3,
+      "latency_s_per_task": 1.002,
+      "invalid_output_rate": 0.0
+    },
+    "overall": {
+      "task_score": 0.965,
+      "objective": 0.936,
+      "cost_weight": 0.05,
+      "llm_calls_per_task": 1.02,
+      "tokens_per_task": 579.3,
+      "latency_s_per_task": 0.878,
+      "invalid_output_rate": 0.0,
+      "tool_calls_per_task": 2.0,
+      "format_retry_rate": 0.005,
+      "fallback_rate": 0.0
+    }
+  },
+  "client_stats": {
+    "total_calls": 599,
+    "cached_calls": 595,
+    "api_calls": 4,
+    "prompt_tokens": 1830,
+    "completion_tokens": 789,
+    "total_tokens": 2619,
+    "total_latency_s": 3.433,
+    "key_rotations": 0,
+    "retries": 0,
+    "rate_limit_hits": 0,
+    "keys_used_count": 0
+  },
+  "optimizer_client_stats": {
+    "total_calls": 54,
+    "cached_calls": 20,
+    "api_calls": 34,
+    "prompt_tokens": 13033,
+    "completion_tokens": 8039,
+    "total_tokens": 21072,
+    "total_latency_s": 41.61,
+    "key_rotations": 1,
+    "retries": 1,
+    "rate_limit_hits": 1,
+    "keys_used_count": 2
+  },
+  "wall_time_s": 16.2
+}

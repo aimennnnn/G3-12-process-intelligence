@@ -1,0 +1,11 @@
+round 0 (seed=process_seeded spec=process_context(top_k=3)+generate+verify(mode=revise)): acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=565 score=0.854
+round 1: parent=0 action='add process_context (top_k=5)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=562 score=0.854 IMPROVED
+   reason: Increasing the context window to the top 5 most similar cases gives the model more relevant precedents, helping it distinguish when a submis
+round 2: parent=1 action='add process_context (top_k=1)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=551 score=0.857 IMPROVED
+   reason: Adding a focused process_context with top_k=1 highlights the immediate prior step, helping the model choose the correct next action without 
+round 3: parent=0 action='add ensemble (n=3)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=1616 score=0.643 no improve
+   reason: Adding a small ensemble (n=3) can combine multiple predictions to correct occasional mis‑steps like confusing “REJECTED” with “APPROVED” whi
+round 4: parent=0 action='add verify (mode=flag)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=565 score=0.854 no improve
+   reason: Adding a verification step with mode=flag can catch incorrect predictions (like the wrong next step) without the heavy cost of ensembles, im
+
+Best: round 2 spec=process_context(top_k=1)+generate+verify(mode=revise) score=0.857 (acc=0.967 tokens/task=551)

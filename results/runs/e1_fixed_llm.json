@@ -1,0 +1,81 @@
+{
+  "id": "e1_fixed_llm",
+  "experiment": "E1",
+  "kind": "baseline",
+  "run": {
+    "id": "e1_fixed_llm",
+    "exp": "E1",
+    "kind": "baseline",
+    "method": "fixed_llm"
+  },
+  "models": {
+    "executor": "openai/gpt-oss-20b",
+    "optimizer": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "reasoning_effort": "low",
+    "temperature": 0.0
+  },
+  "n_test": {
+    "next_activity": 100,
+    "anomaly": 100
+  },
+  "n_val": {
+    "next_activity": 15,
+    "anomaly": 15
+  },
+  "started": "2026-11-09 14:17",
+  "test": {
+    "next_activity": {
+      "n": 100,
+      "accuracy": 0.6,
+      "macro_f1": 0.4132,
+      "llm_calls_per_task": 1.0,
+      "tokens_per_task": 466.3,
+      "latency_s_per_task": 0.876,
+      "invalid_output_rate": 0.0
+    },
+    "anomaly": {
+      "n": 100,
+      "accuracy": 0.84,
+      "precision": 0.9,
+      "recall": 0.75,
+      "f1": 0.8182,
+      "recall_by_type": {
+        "insert": 0.889,
+        "rework": 1.0,
+        "skip": 0.0,
+        "swap": 0.7
+      },
+      "llm_calls_per_task": 1.0,
+      "tokens_per_task": 432.3,
+      "latency_s_per_task": 0.928,
+      "invalid_output_rate": 0.01
+    },
+    "overall": {
+      "task_score": 0.72,
+      "objective": 0.72,
+      "cost_weight": 0.0,
+      "llm_calls_per_task": 1.0,
+      "tokens_per_task": 449.3,
+      "latency_s_per_task": 0.902,
+      "invalid_output_rate": 0.005,
+      "tool_calls_per_task": 0.0,
+      "format_retry_rate": 0.0,
+      "fallback_rate": 0.0
+    }
+  },
+  "client_stats": {
+    "total_calls": 200,
+    "cached_calls": 200,
+    "api_calls": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "total_latency_s": 0.0,
+    "key_rotations": 0,
+    "retries": 0,
+    "rate_limit_hits": 0,
+    "keys_used_count": 0
+  },
+  "wall_time_s": 0.0
+}

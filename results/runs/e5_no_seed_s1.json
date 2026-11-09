@@ -1,0 +1,598 @@
+{
+  "id": "e5_no_seed_s1",
+  "experiment": "E5",
+  "kind": "search",
+  "run": {
+    "id": "e5_no_seed_s1",
+    "exp": "E5",
+    "kind": "search",
+    "seed": "blank",
+    "cost_weight": 0.1,
+    "run_seed": 1
+  },
+  "models": {
+    "executor": "openai/gpt-oss-20b",
+    "optimizer": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "reasoning_effort": "low",
+    "temperature": 0.0
+  },
+  "n_test": {
+    "next_activity": 100,
+    "anomaly": 100
+  },
+  "n_val": {
+    "next_activity": 15,
+    "anomaly": 15
+  },
+  "started": "2026-11-09 14:18",
+  "search": [
+    {
+      "round": 0,
+      "parent": null,
+      "modification": "seed=blank",
+      "spec": {
+        "name": "blank",
+        "steps": [
+          {
+            "operator": "generate",
+            "params": {}
+          }
+        ]
+      },
+      "accuracy": 0.6334,
+      "tokens_per_task": 486.5,
+      "score": 0.5847,
+      "improved": true,
+      "proposer_reasoning": "initial seed",
+      "accuracy_next_activity": 0.4667,
+      "accuracy_anomaly": 0.8,
+      "cost": {
+        "tokens_per_task": 486.5,
+        "latency_s_per_task": 0.975,
+        "llm_calls_per_task": 1.067,
+        "tool_calls_per_task": 0.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        1,
+        2
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.4667,
+          "macro_f1": 0.3926,
+          "llm_calls_per_task": 1.133,
+          "tokens_per_task": 582.1,
+          "latency_s_per_task": 1.048,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 0.8,
+          "precision": 0.6667,
+          "recall": 0.8,
+          "f1": 0.7273,
+          "recall_by_type": {
+            "swap": 0.8
+          },
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 390.9,
+          "latency_s_per_task": 0.902,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.6334,
+          "objective": 0.5847,
+          "cost_weight": 0.1,
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 486.5,
+          "latency_s_per_task": 0.975,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 0.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration REJECTED by ADMINISTRATION",
+            "Declaration REJECTED by EMPLOYEE",
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration APPROVED by ADMINISTRATION",
+            "Declaration FINAL_APPROVED by SUPERVISOR"
+          ],
+          "prediction": "Payment Handled",
+          "target": "Request Payment",
+          "anomaly_type": null
+        },
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration APPROVED by ADMINISTRATION"
+          ],
+          "prediction": "Declaration APPROVED by BUDGET OWNER",
+          "target": "Declaration FINAL_APPROVED by SUPERVISOR",
+          "anomaly_type": null
+        },
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        },
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
+          "target": "Declaration APPROVED by ADMINISTRATION",
+          "anomaly_type": null
+        },
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
+          "target": "Declaration APPROVED by ADMINISTRATION",
+          "anomaly_type": null
+        },
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE",
+            "Declaration REJECTED by ADMINISTRATION"
+          ],
+          "prediction": "Declaration FOR_APPROVAL by ADMINISTRATION",
+          "target": "Declaration REJECTED by EMPLOYEE",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "parent": 0,
+      "modification": "add process_context (top_k=1)",
+      "spec": {
+        "name": "r1",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 1
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 550.9,
+      "score": 0.9116,
+      "improved": true,
+      "proposer_reasoning": "Adding a focused process_context (top_k\u202f=\u202f1) supplies the exact workflow rules needed to choose the correct next step, correcting the sequence errors while keeping token usage low.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 550.9,
+        "latency_s_per_task": 1.081,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 1.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 484.7,
+          "latency_s_per_task": 0.904,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9116,
+          "cost_weight": 0.1,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 550.9,
+          "latency_s_per_task": 1.081,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 1.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "parent": 0,
+      "modification": "add process_context (top_k=3)",
+      "spec": {
+        "name": "r2",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 3
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 565.1,
+      "score": 0.9101,
+      "improved": true,
+      "proposer_reasoning": "Increasing the process_context window to the top\u202f3 recent steps gives the model a richer history, helping it distinguish similar states (e.g., SUBMITTED vs. APPROVED) and correctly predict the next transition without a large token penalty.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 565.1,
+        "latency_s_per_task": 1.054,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 1.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        3
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 513.2,
+          "latency_s_per_task": 0.849,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9101,
+          "cost_weight": 0.1,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 565.1,
+          "latency_s_per_task": 1.054,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 1.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "parent": 2,
+      "modification": "add process_context (top_k=5)",
+      "spec": {
+        "name": "r3",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 5
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 562.2,
+      "score": 0.9104,
+      "improved": true,
+      "proposer_reasoning": "Increasing the context window to the top\u202f5 most similar past cases gives the model more relevant examples of when a submitted declaration is rejected, helping it choose the correct next step.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 562.2,
+        "latency_s_per_task": 1.059,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 1.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        4
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 507.4,
+          "latency_s_per_task": 0.86,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9104,
+          "cost_weight": 0.1,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 562.2,
+          "latency_s_per_task": 1.059,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 1.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "parent": 3,
+      "modification": "add verify (mode=revise)",
+      "spec": {
+        "name": "r4",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 5
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 562.2,
+      "score": 0.9104,
+      "improved": false,
+      "proposer_reasoning": "Adding a verify step in revise mode lets the model double\u2011check its prediction and correct mismatches like confusing \u201cAPPROVED\u201d with \u201cREJECTED\u201d without a large token overhead.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 562.2,
+        "latency_s_per_task": 1.059,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 507.4,
+          "latency_s_per_task": 0.86,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9104,
+          "cost_weight": 0.1,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 562.2,
+          "latency_s_per_task": 1.059,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    }
+  ],
+  "best_round": 1,
+  "workflow": {
+    "name": "r1",
+    "steps": [
+      {
+        "operator": "process_context",
+        "params": {
+          "top_k": 1
+        }
+      },
+      {
+        "operator": "generate",
+        "params": {}
+      }
+    ]
+  },
+  "workflow_text": "process_context(top_k=1)+generate",
+  "test": {
+    "next_activity": {
+      "n": 100,
+      "accuracy": 0.95,
+      "macro_f1": 0.7,
+      "llm_calls_per_task": 1.0,
+      "tokens_per_task": 489.5,
+      "latency_s_per_task": 0.906,
+      "invalid_output_rate": 0.0
+    },
+    "anomaly": {
+      "n": 100,
+      "accuracy": 0.95,
+      "precision": 1.0,
+      "recall": 0.8958,
+      "f1": 0.9451,
+      "recall_by_type": {
+        "insert": 0.889,
+        "rework": 1.0,
+        "skip": 0.5,
+        "swap": 1.0
+      },
+      "llm_calls_per_task": 1.01,
+      "tokens_per_task": 594.8,
+      "latency_s_per_task": 0.969,
+      "invalid_output_rate": 0.0
+    },
+    "overall": {
+      "task_score": 0.95,
+      "objective": 0.8958,
+      "cost_weight": 0.1,
+      "llm_calls_per_task": 1.005,
+      "tokens_per_task": 542.1,
+      "latency_s_per_task": 0.937,
+      "invalid_output_rate": 0.0,
+      "tool_calls_per_task": 1.0,
+      "format_retry_rate": 0.005,
+      "fallback_rate": 0.0
+    }
+  },
+  "client_stats": {
+    "total_calls": 357,
+    "cached_calls": 357,
+    "api_calls": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "total_latency_s": 0.0,
+    "key_rotations": 0,
+    "retries": 0,
+    "rate_limit_hits": 0,
+    "keys_used_count": 0
+  },
+  "optimizer_client_stats": {
+    "total_calls": 8,
+    "cached_calls": 0,
+    "api_calls": 8,
+    "prompt_tokens": 3252,
+    "completion_tokens": 1647,
+    "total_tokens": 4899,
+    "total_latency_s": 9.06,
+    "key_rotations": 0,
+    "retries": 0,
+    "rate_limit_hits": 0,
+    "keys_used_count": 1
+  },
+  "wall_time_s": 8.7
+}

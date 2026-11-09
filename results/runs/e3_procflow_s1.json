@@ -12,7 +12,7 @@
   },
   "models": {
     "executor": "openai/gpt-oss-20b",
-    "optimizer": "openai/gpt-oss-20b",
+    "optimizer": "openai/gpt-oss-120b",
     "provider": "groq",
     "reasoning_effort": "low",
     "temperature": 0.0
@@ -25,7 +25,7 @@
     "next_activity": 15,
     "anomaly": 15
   },
-  "started": "2026-11-07 19:47",
+  "started": "2026-11-09 14:17",
   "search": [
     {
       "round": 0,
@@ -64,7 +64,7 @@
         "latency_s_per_task": 1.054,
         "llm_calls_per_task": 1.033,
         "tool_calls_per_task": 2.0,
-        "cache_hit_rate": 0.5,
+        "cache_hit_rate": 1.0,
         "format_retry_rate": 0.0333,
         "fallback_rate": 0.0
       },
@@ -124,9 +124,103 @@
     {
       "round": 1,
       "parent": 0,
-      "modification": "add process_context (top_k=1)",
+      "modification": "add process_context (top_k=5)",
       "spec": {
         "name": "r1",
+        "steps": [
+          {
+            "operator": "process_context",
+            "params": {
+              "top_k": 5
+            }
+          },
+          {
+            "operator": "generate",
+            "params": {}
+          },
+          {
+            "operator": "verify",
+            "params": {
+              "mode": "revise"
+            }
+          }
+        ]
+      },
+      "accuracy": 0.9667,
+      "tokens_per_task": 562.2,
+      "score": 0.9104,
+      "improved": true,
+      "proposer_reasoning": "Increasing the context window to the top\u202f5 most relevant past cases gives the model more examples of \u201cDECLARATION REJECTED by ADMINISTRATION,\u201d helping it choose the correct next step without a large token penalty.",
+      "accuracy_next_activity": 0.9333,
+      "accuracy_anomaly": 1.0,
+      "cost": {
+        "tokens_per_task": 562.2,
+        "latency_s_per_task": 1.059,
+        "llm_calls_per_task": 1.033,
+        "tool_calls_per_task": 2.0,
+        "cache_hit_rate": 1.0,
+        "format_retry_rate": 0.0333,
+        "fallback_rate": 0.0
+      },
+      "children": [
+        2,
+        4
+      ],
+      "summary": {
+        "next_activity": {
+          "n": 15,
+          "accuracy": 0.9333,
+          "macro_f1": 0.8148,
+          "llm_calls_per_task": 1.0,
+          "tokens_per_task": 507.4,
+          "latency_s_per_task": 0.86,
+          "invalid_output_rate": 0.0
+        },
+        "anomaly": {
+          "n": 15,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "recall_by_type": {
+            "swap": 1.0
+          },
+          "llm_calls_per_task": 1.067,
+          "tokens_per_task": 617.1,
+          "latency_s_per_task": 1.258,
+          "invalid_output_rate": 0.0
+        },
+        "overall": {
+          "task_score": 0.9667,
+          "objective": 0.9104,
+          "cost_weight": 0.1,
+          "llm_calls_per_task": 1.033,
+          "tokens_per_task": 562.2,
+          "latency_s_per_task": 1.059,
+          "invalid_output_rate": 0.0,
+          "tool_calls_per_task": 2.0,
+          "format_retry_rate": 0.0333,
+          "fallback_rate": 0.0
+        }
+      },
+      "failure_examples": [
+        {
+          "task": "next_activity",
+          "input": [
+            "Declaration SUBMITTED by EMPLOYEE"
+          ],
+          "prediction": "Declaration APPROVED by ADMINISTRATION",
+          "target": "Declaration REJECTED by ADMINISTRATION",
+          "anomaly_type": null
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "parent": 1,
+      "modification": "add process_context (top_k=1)",
+      "spec": {
+        "name": "r2",
         "steps": [
           {
             "operator": "process_context",
@@ -150,7 +244,7 @@
       "tokens_per_task": 550.9,
       "score": 0.9116,
       "improved": true,
-      "proposer_reasoning": "Using a single, most relevant context (top_k=1) reduces noise from unrelated steps and sharpens the model\u2019s focus on the immediate preceding action, which should correct the approval/rejection misprediction while keeping token usage low.",
+      "proposer_reasoning": "Using a very narrow context (top_k\u202f=\u202f1) supplies the most relevant prior example, reducing noise that led to the wrong \u201cAPPROVED\u201d prediction while adding minimal token overhead.",
       "accuracy_next_activity": 0.9333,
       "accuracy_anomaly": 1.0,
       "cost": {
@@ -158,14 +252,11 @@
         "latency_s_per_task": 1.081,
         "llm_calls_per_task": 1.033,
         "tool_calls_per_task": 2.0,
-        "cache_hit_rate": 0.7333,
+        "cache_hit_rate": 1.0,
         "format_retry_rate": 0.0333,
         "fallback_rate": 0.0
       },
-      "children": [
-        2,
-        4
-      ],
+      "children": [],
       "summary": {
         "next_activity": {
           "n": 15,
@@ -216,16 +307,16 @@
       ]
     },
     {
-      "round": 2,
-      "parent": 1,
+      "round": 3,
+      "parent": 0,
       "modification": "add ensemble (n=3)",
       "spec": {
-        "name": "r2",
+        "name": "r3",
         "steps": [
           {
             "operator": "process_context",
             "params": {
-              "top_k": 1
+              "top_k": 3
             }
           },
           {
@@ -247,15 +338,15 @@
         ]
       },
       "accuracy": 0.9667,
-      "tokens_per_task": 1573.6,
-      "score": 0.8093,
+      "tokens_per_task": 1616.4,
+      "score": 0.805,
       "improved": false,
-      "proposer_reasoning": "Ensembling 3 models will aggregate diverse predictions, reducing the chance of a single misstep like the wrong approval/rejection decision.",
+      "proposer_reasoning": "Adding a small ensemble (n=3) can capture alternative predictions and correct the mistaken \u201cAPPROVED\u201d output, boosting accuracy without a huge token penalty.",
       "accuracy_next_activity": 0.9333,
       "accuracy_anomaly": 1.0,
       "cost": {
-        "tokens_per_task": 1573.6,
-        "latency_s_per_task": 3.118,
+        "tokens_per_task": 1616.4,
+        "latency_s_per_task": 3.036,
         "llm_calls_per_task": 3.033,
         "tool_calls_per_task": 2.0,
         "cache_hit_rate": 1.0,
@@ -269,8 +360,8 @@
           "accuracy": 0.9333,
           "macro_f1": 0.8148,
           "llm_calls_per_task": 3.0,
-          "tokens_per_task": 1454.0,
-          "latency_s_per_task": 2.711,
+          "tokens_per_task": 1539.6,
+          "latency_s_per_task": 2.548,
           "invalid_output_rate": 0.0
         },
         "anomaly": {
@@ -289,11 +380,11 @@
         },
         "overall": {
           "task_score": 0.9667,
-          "objective": 0.8093,
+          "objective": 0.805,
           "cost_weight": 0.1,
           "llm_calls_per_task": 3.033,
-          "tokens_per_task": 1573.6,
-          "latency_s_per_task": 3.118,
+          "tokens_per_task": 1616.4,
+          "latency_s_per_task": 3.036,
           "invalid_output_rate": 0.0,
           "tool_calls_per_task": 2.0,
           "format_retry_rate": 0.0333,
@@ -313,144 +404,9 @@
       ]
     },
     {
-      "round": 3,
-      "parent": 0,
-      "modification": "remove process_context",
-      "spec": {
-        "name": "r3",
-        "steps": [
-          {
-            "operator": "generate",
-            "params": {}
-          },
-          {
-            "operator": "verify",
-            "params": {
-              "mode": "revise"
-            }
-          }
-        ]
-      },
-      "accuracy": 0.7,
-      "tokens_per_task": 514.4,
-      "score": 0.6486,
-      "improved": false,
-      "proposer_reasoning": "[fallback: proposer returned '', chose random action]",
-      "accuracy_next_activity": 0.5333,
-      "accuracy_anomaly": 0.8667,
-      "cost": {
-        "tokens_per_task": 514.4,
-        "latency_s_per_task": 1.016,
-        "llm_calls_per_task": 1.1,
-        "tool_calls_per_task": 1.0,
-        "cache_hit_rate": 0.9333,
-        "format_retry_rate": 0.0333,
-        "fallback_rate": 0.0333
-      },
-      "children": [],
-      "summary": {
-        "next_activity": {
-          "n": 15,
-          "accuracy": 0.5333,
-          "macro_f1": 0.5593,
-          "llm_calls_per_task": 1.133,
-          "tokens_per_task": 582.1,
-          "latency_s_per_task": 1.048,
-          "invalid_output_rate": 0.0
-        },
-        "anomaly": {
-          "n": 15,
-          "accuracy": 0.8667,
-          "precision": 0.7143,
-          "recall": 1.0,
-          "f1": 0.8333,
-          "recall_by_type": {
-            "swap": 1.0
-          },
-          "llm_calls_per_task": 1.067,
-          "tokens_per_task": 446.7,
-          "latency_s_per_task": 0.984,
-          "invalid_output_rate": 0.0
-        },
-        "overall": {
-          "task_score": 0.7,
-          "objective": 0.6486,
-          "cost_weight": 0.1,
-          "llm_calls_per_task": 1.1,
-          "tokens_per_task": 514.4,
-          "latency_s_per_task": 1.016,
-          "invalid_output_rate": 0.0,
-          "tool_calls_per_task": 1.0,
-          "format_retry_rate": 0.0333,
-          "fallback_rate": 0.0333
-        }
-      },
-      "failure_examples": [
-        {
-          "task": "next_activity",
-          "input": [
-            "Declaration REJECTED by ADMINISTRATION",
-            "Declaration REJECTED by EMPLOYEE",
-            "Declaration SUBMITTED by EMPLOYEE",
-            "Declaration APPROVED by ADMINISTRATION",
-            "Declaration FINAL_APPROVED by SUPERVISOR"
-          ],
-          "prediction": "Payment Handled",
-          "target": "Request Payment",
-          "anomaly_type": null
-        },
-        {
-          "task": "next_activity",
-          "input": [
-            "Declaration SUBMITTED by EMPLOYEE",
-            "Declaration APPROVED by ADMINISTRATION"
-          ],
-          "prediction": "Declaration APPROVED by BUDGET OWNER",
-          "target": "Declaration FINAL_APPROVED by SUPERVISOR",
-          "anomaly_type": null
-        },
-        {
-          "task": "next_activity",
-          "input": [
-            "Declaration SUBMITTED by EMPLOYEE"
-          ],
-          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
-          "target": "Declaration REJECTED by ADMINISTRATION",
-          "anomaly_type": null
-        },
-        {
-          "task": "next_activity",
-          "input": [
-            "Declaration SUBMITTED by EMPLOYEE"
-          ],
-          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
-          "target": "Declaration APPROVED by ADMINISTRATION",
-          "anomaly_type": null
-        },
-        {
-          "task": "next_activity",
-          "input": [
-            "Declaration SUBMITTED by EMPLOYEE"
-          ],
-          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
-          "target": "Declaration APPROVED by ADMINISTRATION",
-          "anomaly_type": null
-        },
-        {
-          "task": "next_activity",
-          "input": [
-            "Declaration SUBMITTED by EMPLOYEE"
-          ],
-          "prediction": "Declaration FOR_APPROVAL by PRE_APPROVER",
-          "target": "Declaration APPROVED by ADMINISTRATION",
-          "anomaly_type": null
-        }
-      ]
-    },
-    {
       "round": 4,
       "parent": 1,
-      "modification": "add process_context (top_k=5)",
+      "modification": "add verify (mode=flag)",
       "spec": {
         "name": "r4",
         "steps": [
@@ -467,7 +423,7 @@
           {
             "operator": "verify",
             "params": {
-              "mode": "revise"
+              "mode": "flag"
             }
           }
         ]
@@ -476,7 +432,7 @@
       "tokens_per_task": 562.2,
       "score": 0.9104,
       "improved": false,
-      "proposer_reasoning": "Increasing the context to 5 gives the model more relevant history, helping it correctly predict a rejection instead of an approval.",
+      "proposer_reasoning": "Adding a verification step with\u202fmode=flag\u202fcan catch implausible next\u2011step predictions (like approving a submitted declaration) without a large token increase.",
       "accuracy_next_activity": 0.9333,
       "accuracy_anomaly": 1.0,
       "cost": {
@@ -484,7 +440,7 @@
         "latency_s_per_task": 1.059,
         "llm_calls_per_task": 1.033,
         "tool_calls_per_task": 2.0,
-        "cache_hit_rate": 0.9333,
+        "cache_hit_rate": 1.0,
         "format_retry_rate": 0.0333,
         "fallback_rate": 0.0
       },
@@ -539,9 +495,9 @@
       ]
     }
   ],
-  "best_round": 1,
+  "best_round": 2,
   "workflow": {
-    "name": "r1",
+    "name": "r2",
     "steps": [
       {
         "operator": "process_context",
@@ -602,5 +558,31 @@
       "fallback_rate": 0.0
     }
   },
-  "wall_time_s": 394.2
+  "client_stats": {
+    "total_calls": 419,
+    "cached_calls": 419,
+    "api_calls": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "total_latency_s": 0.0,
+    "key_rotations": 0,
+    "retries": 0,
+    "rate_limit_hits": 0,
+    "keys_used_count": 0
+  },
+  "optimizer_client_stats": {
+    "total_calls": 5,
+    "cached_calls": 0,
+    "api_calls": 5,
+    "prompt_tokens": 1791,
+    "completion_tokens": 1088,
+    "total_tokens": 2879,
+    "total_latency_s": 6.124,
+    "key_rotations": 0,
+    "retries": 0,
+    "rate_limit_hits": 0,
+    "keys_used_count": 1
+  },
+  "wall_time_s": 9.6
 }

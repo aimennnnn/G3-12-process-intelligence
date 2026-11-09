@@ -1,0 +1,103 @@
+{
+  "id": "e5_seed_only",
+  "experiment": "E5",
+  "kind": "fixed",
+  "run": {
+    "id": "e5_seed_only",
+    "exp": "E5",
+    "kind": "fixed",
+    "seed": "process"
+  },
+  "models": {
+    "executor": "openai/gpt-oss-20b",
+    "optimizer": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "reasoning_effort": "low",
+    "temperature": 0.0
+  },
+  "n_test": {
+    "next_activity": 100,
+    "anomaly": 100
+  },
+  "n_val": {
+    "next_activity": 15,
+    "anomaly": 15
+  },
+  "started": "2026-11-09 14:44",
+  "workflow": {
+    "name": "process_seeded",
+    "steps": [
+      {
+        "operator": "process_context",
+        "params": {
+          "top_k": 3
+        }
+      },
+      {
+        "operator": "generate",
+        "params": {}
+      },
+      {
+        "operator": "verify",
+        "params": {
+          "mode": "revise"
+        }
+      }
+    ]
+  },
+  "workflow_text": "process_context(top_k=3)+generate+verify(mode=revise)",
+  "test": {
+    "next_activity": {
+      "n": 100,
+      "accuracy": 0.95,
+      "macro_f1": 0.7,
+      "llm_calls_per_task": 1.0,
+      "tokens_per_task": 524.3,
+      "latency_s_per_task": 0.849,
+      "invalid_output_rate": 0.0
+    },
+    "anomaly": {
+      "n": 100,
+      "accuracy": 0.98,
+      "precision": 1.0,
+      "recall": 0.9583,
+      "f1": 0.9787,
+      "recall_by_type": {
+        "insert": 0.889,
+        "rework": 1.0,
+        "skip": 0.875,
+        "swap": 1.0
+      },
+      "llm_calls_per_task": 1.03,
+      "tokens_per_task": 582.4,
+      "latency_s_per_task": 0.987,
+      "invalid_output_rate": 0.0
+    },
+    "overall": {
+      "task_score": 0.965,
+      "objective": 0.965,
+      "cost_weight": 0.0,
+      "llm_calls_per_task": 1.015,
+      "tokens_per_task": 553.3,
+      "latency_s_per_task": 0.918,
+      "invalid_output_rate": 0.0,
+      "tool_calls_per_task": 2.0,
+      "format_retry_rate": 0.0,
+      "fallback_rate": 0.0
+    }
+  },
+  "client_stats": {
+    "total_calls": 203,
+    "cached_calls": 147,
+    "api_calls": 56,
+    "prompt_tokens": 22165,
+    "completion_tokens": 14957,
+    "total_tokens": 37122,
+    "total_latency_s": 55.659,
+    "key_rotations": 2,
+    "retries": 2,
+    "rate_limit_hits": 2,
+    "keys_used_count": 3
+  },
+  "wall_time_s": 123.3
+}

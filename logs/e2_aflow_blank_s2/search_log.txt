@@ -1,0 +1,12 @@
+round 0 (seed=blank spec=generate): acc_na=0.467 acc_an=0.800 acc=0.633 tokens/task=486 score=0.633
+round 1: parent=0 action='add process_context (top_k=3)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=565 score=0.967 IMPROVED
+   reason: Adding a modest process_context (top_k = 3) gives the model enough recent workflow history to choose the correct next step without a large t
+round 2: parent=0 action='add process_context (top_k=5)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=562 score=0.967 IMPROVED
+   reason: Increasing the process_context window to the top 5 most relevant prior steps should give the model enough additional context to distinguish 
+round 3: parent=1 action='add verify (mode=revise)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=565 score=0.967 no improve
+   reason: Adding a verify step in revise mode lets the model re‑evaluate its prediction and correct likely mistakes, boosting accuracy without a large
+round 4: parent=3 action='add process_context (top_k=5)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=562 score=0.967 no improve
+   reason: Increasing the context window to top_k = 5 gives the model more alternative paths to consider, helping it choose the correct “REJECTED” outc
+early stop: no improvement for 3 rounds
+
+Best: round 1 spec=process_context(top_k=3)+generate score=0.967 (acc=0.967 tokens/task=565)

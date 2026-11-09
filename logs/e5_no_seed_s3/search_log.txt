@@ -1,0 +1,12 @@
+round 0 (seed=blank spec=generate): acc_na=0.467 acc_an=0.800 acc=0.633 tokens/task=486 score=0.585
+round 1: parent=0 action='add process_context (top_k=1)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=551 score=0.912 IMPROVED
+   reason: Adding `process_context` with `top_k=1` gives the model the most relevant prior step information without extra token overhead, helping it ch
+round 2: parent=1 action='add process_context (top_k=3)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=565 score=0.910 no improve
+   reason: Increasing the context window to the three most similar past cases gives the model richer examples, helping it distinguish when a declaratio
+round 3: parent=2 action='add process_context (top_k=5)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=562 score=0.910 IMPROVED
+   reason: Increasing the context window to the top 5 most similar past cases gives the model more relevant examples of when a submitted declaration is
+round 4: parent=1 action='add verify (mode=revise)' -> acc_na=0.933 acc_an=1.000 acc=0.967 tokens/task=551 score=0.912 no improve
+   reason: Adding a verify step in revise mode lets the model re‑evaluate its prediction, catching cases like confusing approval with rejection without
+early stop: no improvement for 3 rounds
+
+Best: round 1 spec=process_context(top_k=1)+generate score=0.912 (acc=0.967 tokens/task=551)
