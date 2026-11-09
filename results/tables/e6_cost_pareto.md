@@ -1,0 +1,8 @@
+### E6: Cost-Aware Objective Sweep (Pareto Frontier)
+
+| Cost Weight (λ) | Run ID | Tokens / Task | Task Score | Token Reduction (%) | Score Delta | Best Workflow |
+|---|---|---|---|---|---|---|
+| 0.0 | e5_no_cost_s1 | 568.6 | 0.965 | 0.0 | 0.0 | process_context(top_k=3)+generate+verify(mode=revise) |
+| 0.05 | e4_cost_0.05_s1 | 579.3 | 0.965 | -1.9 | 0.0 | process_context(top_k=5)+generate+verify(mode=revise) |
+| 0.1 | e3_procflow_s1 | 553.9 | 0.965 | 2.6 | 0.0 | process_context(top_k=1)+generate+verify(mode=revise) |
+| 0.2 | e4_cost_0.2_s1 | 553.9 | 0.965 | 2.6 | 0.0 | process_context(top_k=1)+generate+verify(mode=revise) |

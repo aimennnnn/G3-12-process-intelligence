@@ -1,0 +1,8 @@
+### Gap 3: cost-weight sweep (run seed 1)
+
+| Cost weight | Run | Best workflow | Test tokens/task | LLM calls/task | Test task score | NA acc | Anom F1 |
+|---|---|---|---|---|---|---|---|
+| 0.0 | e5_no_cost_s1 | process_context(top_k=3)+generate+verify(mode=revise) | 569 | 1.02 | 0.965 | 0.950 | 0.979 |
+| 0.05 | e4_cost_0.05_s1 | process_context(top_k=5)+generate+verify(mode=revise) | 579 | 1.02 | 0.965 | 0.950 | 0.979 |
+| 0.1 | e3_procflow_s1 | process_context(top_k=1)+generate+verify(mode=revise) | 554 | 1.02 | 0.965 | 0.950 | 0.979 |
+| 0.2 | e4_cost_0.2_s1 | process_context(top_k=1)+generate+verify(mode=revise) | 554 | 1.02 | 0.965 | 0.950 | 0.979 |

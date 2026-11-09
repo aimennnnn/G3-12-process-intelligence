@@ -1,0 +1,11 @@
+### Anomaly recall by perturbation type
+
+| Method | skip | swap | insert | rework |
+|---|---|---|---|---|
+| Process mining (DFG) | 0.875 | 1.000 | 0.889 | 1.000 |
+| Fixed LLM | 0.000 | 0.700 | 0.889 | 1.000 |
+| AFlow (blank, accuracy-only) | 0.500 ± 0.000 | 1.000 ± 0.000 | 0.889 ± 0.000 | 1.000 ± 0.000 |
+| ProcFlow (full) | 0.875 ± 0.000 | 1.000 ± 0.000 | 0.889 ± 0.000 | 1.000 ± 0.000 |
+| ProcFlow w/o process seed | 0.625 ± 0.217 | 1.000 ± 0.000 | 0.889 ± 0.000 | 1.000 ± 0.000 |
+| ProcFlow w/o cost objective | 0.875 ± 0.000 | 1.000 ± 0.000 | 0.889 ± 0.000 | 1.000 ± 0.000 |
+| ProcFlow w/o search (seed workflow) | 0.875 | 1.000 | 0.889 | 1.000 |
